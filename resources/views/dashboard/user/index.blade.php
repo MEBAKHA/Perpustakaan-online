@@ -40,41 +40,54 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-gray-400">
-                            {{ $loop->iteration }}
+                
+                @if ($users->count())          
+                    @foreach ($users as $user)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-gray-400">
+                                {{ $loop->iteration }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->slug }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->username }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->email }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->role }}
+                            </td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <form action="/dashboard/user/{{ $user->slug }}" method="POST" class="text-red-500 hover:text-red-600">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" onclick="return confirm('Apakah anda yakin?')"><i class="fa-sharp fa-solid fa-trash"></i> Delete</button>
+                                </form>
+                                <p>|</p>
+                                <div class="text-yellow-500 hover:text-yellow-600">
+                                    <a href="/dashboard/user/{{ $user->slug }}/edit"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                                </div>
+                            </td>
+                        </tr>           
+                    @endforeach
+                @else
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td colspan="14" class="px-6 py-4 text-white text-center">
+                            Belum ada data User.
                         </td>
-                        <td class="px-6 py-4">
-                            {{ $user->name }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $user->slug }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $user->username }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $user->email }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $user->role }}
-                        </td>
-                        <td class="px-6 py-4 flex gap-2">
-                            <form action="/dashboard/user/{{ $user->slug }}" method="POST" class="text-red-500 hover:text-red-600">
-                                @csrf
-                                @method('delete')
-                                <button type="submit" onclick="return confirm('Apakah anda yakin?')"><i class="fa-sharp fa-solid fa-trash"></i> Delete</button>
-                            </form>
-                            <p>|</p>
-                            <div class="text-yellow-500 hover:text-yellow-600">
-                                <a href="/dashboard/user/{{ $user->slug }}/edit"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                            </div>
-                        </td>
-                    </tr>           
-                @endforeach
+                    </tr>
+                @endif
             </tbody>
         </table>
+        {{-- pagination --}}
+        <div class="mt-6">
+            {{ $users->links() }}
+        </div>
       </div>
     </div>
   </div>

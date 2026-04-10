@@ -13,7 +13,7 @@ class AuthorController extends Controller
     public function index()
     {
         $title = "Author";
-        $authors = Author::all();
+        $authors = Author::latest()->paginate(10);
 
         return view('dashboard.author.index', compact('authors', 'title'));
     }

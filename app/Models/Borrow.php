@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\Request;
 
 class Borrow extends Model
 {
@@ -11,8 +12,8 @@ class Borrow extends Model
     protected $with = ['book', 'user'];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'borrow_date' => 'datetime',
+        'due_date' => 'datetime',
     ];
 
     public function book()
@@ -24,7 +25,7 @@ class Borrow extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+        
     }
-
 
 }
