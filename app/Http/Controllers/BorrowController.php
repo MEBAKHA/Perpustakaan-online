@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Borrow;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -27,8 +28,12 @@ class BorrowController extends Controller
         $book->status = '1';
         $book->save();
 
-        return redirect('/');
+        $user = User::find($request->user_id);
+        
+        return redirect()->route('borrows', $user->slug)->with('success', 'Data berhasil disimpan');
+        
     }
+
 
     public function index()
     
@@ -67,5 +72,12 @@ class BorrowController extends Controller
     {
         Borrow::destroy($borrow->id);
         return redirect ('/dashboard/borrow')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function userBorrows(User $user)
+    {
+        $title = $user->name . "borrows";
+        $borrows = Borrow::where('user_id', $user->id)->latest()->paginate(10);
+        return view('borrows', compact('title', 'borrows'));
     }
 }   
