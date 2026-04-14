@@ -69,9 +69,10 @@
                                             </p>
                                         @endif
                                     </td>
+
                                     
                                     <td class="px-6 py-4">
-                                        <a href="#" class="bg-blue-200 px-2 py-1 rounded-lg text-blue-500 hover:bg-blue-500 hover:text-white">
+                                        <a href="/borrow/detail/{{$borrow->id}}" class="bg-blue-200 px-2 py-1 rounded-lg text-blue-500 hover:bg-blue-500 hover:text-white">
                                             <i class="fa-regular fa-eye"></i>
                                         </a>
                                     </td>
