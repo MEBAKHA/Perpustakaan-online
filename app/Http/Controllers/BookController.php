@@ -126,4 +126,5 @@ class BookController extends Controller
         return redirect('/dashboard/book')->with('success', 'Data buku berhasil dihapus!');
 
     }
+
 }
