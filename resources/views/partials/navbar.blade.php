@@ -3,19 +3,19 @@
         <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
             <div class="shrink-0">
-                <a href="/"><img class="size-8" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"></a>     
+                <a class=" text-amber-50 font-bold text-2xl" href="/">LITEMARI📕</a>     
             </div>
             <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="/" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page">Homepage</a>
-                <a href="/hall" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">Hall</a>
-                @auth
-                    <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">borrows</a>
-                @endauth
-                <a href="/about" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">About</a>
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    <a href="/" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page">🏠 Homepage</a>
+                    <a href="/hall" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> Hall</a>
+                    @auth
+                        <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">borrows</a>
+                    @endauth
+                </div>
             </div>
-            </div>
+
         </div>
         @auth
             <div class="hidden md:block">
@@ -26,8 +26,17 @@
                     <div>
                     <button type="button" @click="isOpen = !isOpen" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                         <span class="absolute -inset-1.5"></span>
-                        <span class="sr-only">Open user menu</span>
-                        <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        <span class="sr-only">Open user menu</span> 
+                        @auth
+                            <img 
+                                src="{{ auth()->user()->avatar 
+                                    ? asset('storage/' . auth()->user()->avatar) 
+                                    : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+                                class="w-10 h-10 rounded-full border-4 border-white shadow-lg"
+                            >
+                         @endauth
+                    >
+                       
                     </button>
                     </div>
 
@@ -41,13 +50,15 @@
                         x-transition:leave-end="opacity-0 scale-95"
                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                         <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ auth()->user()->name }}</a>
+                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"> <i class="fa-solid fa-circle-user"></i> {{ auth()->user()->name }}</a>
                         @if (auth()->user()->role == 'admin')
                             <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0">Dashboard</a>
                         @endif
+                        <a href="{{ route('story.create') }}" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600  hover:bg-gray-100 transition "> <i class="fa-solid fa-plus"></i> create Story</a>
+                        <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"><i class="fa-solid fa-circle-info mr-2"></i>About</a>
                         <form action="/logout" method="POST">
                             @csrf
-                            <button onclick="return confirm('Apakah anda yakin untuk logout?')" type="submit" class="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition w-full text-left" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</button>
+                            <button onclick="return confirm('Apakah anda yakin untuk logout?')" type="submit" class="cursor-pointer px-4 py-2 text-sm text-red-500 hover:bg-gray-100 transition w-full text-left" role="menuitem" tabindex="-1" id="user-menu-item-2"><i class="fa-solid fa-up-right-from-square mr-3"></i>Sign out</button>
                         </form>
                     </div>
                 </div>
@@ -69,7 +80,7 @@
                 </button>
             </div>
         @else
-            <a class="bg-indigo-500 px-3 py-2 rounded text-white hover:bg-indigo-800 transition duration-150" href="/login">Login</a>
+            <a class=" bg-transparent border border-white shadow-2xl shadow-amber-50 px-6 py-2 rounded text-white hover:bg-emerald-400/5 hover:text-emerald-300 hover:border hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-400 hover:px-5 hover:py-3 transition-all duration-500 font-semibold text-lg h" href="/login"><i class="fa-solid fa-circle-user mr-4"></i>Login</a>
         @endauth
         </div>
     </div>
@@ -89,7 +100,14 @@
             <div class="border-t border-gray-700 pt-4 pb-3">
             <div class="flex items-center px-5">
                 <div class="shrink-0">
-                <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        @auth
+                            <img 
+                                src="{{ auth()->user()->avatar 
+                                    ? asset('storage/' . auth()->user()->avatar) 
+                                    : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+                                class="w-10 h-10 rounded-full border-4 border-white shadow-lg"
+                            >
+                         @endauth
                 </div>
                 <div class="ml-3">
                 <div class="text-base/5 font-medium text-white">{{ auth()->user()->name }}</div>

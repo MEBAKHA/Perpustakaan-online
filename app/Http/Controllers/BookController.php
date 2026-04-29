@@ -11,9 +11,26 @@ use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+  
+    public function suggestions(Request $request)
+    {
+        $search = $request->q;
+
+        // ambil buku
+        $books = Book::where('name', 'like', "%{$search}%")
+            ->limit(3)
+            ->pluck('name');
+
+        // ambil user
+        $users = \App\Models\User::where('name', 'like', "%{$search}%")
+            ->limit(2)
+            ->pluck('name');
+
+        // gabungin
+        $results = $books->merge($users);
+
+        return response()->json($results);
+    }
     public function index()
     {
         $title = "book | index";

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -29,42 +30,33 @@ class LoginController extends Controller
             'role' => 'required'
         ]);
 
+        // 🔥 INI YANG PENTING
+
+        $validatedData['password'] = Hash::make($validatedData['password']);
+
         User::create($validatedData);
 
         return redirect('/login')->with('success', 'Registrasi akun berhasil! Silahkan login.');
-        // return dd($request->all());
     }
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required|string|min:3|max:255',
-            'password' => 'required|string|min:5'
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $user = \App\Models\User::where('username', $request->username)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             $request->session()->regenerate();
 
-            $user = Auth::user();
-            $role = $user->role;
-
-            switch ($role) {
-                case 'admin':
-                    return redirect()->intended('/dashboard');
-                case 'user':
-                    return redirect()->intended('/');
-                
-                default:
-                    Auth::logout();
-                    return back()->with('error', 'Role tidak dikenali.');
-            }
-
-            
+            return redirect('/');
         }
 
         return back()->with('error', 'Login Gagal!');
     }
-
     public function logout(Request $request)
     {
         Auth::logout();

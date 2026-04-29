@@ -3,30 +3,36 @@
 @section('konten')
     {{-- Search Section --}}
     <div class="max-w-3xl mx-auto mb-6">
-        <form action="/hall" method="get" class="flex items-center bg-white shadow-md rounded-lg overflow-hidden">
-            <input
-                name="search" 
-                type="text"  
-                class="w-full px-4 py-2 text-gray-700 focus:outline-none" 
-                placeholder="Cari buku..." 
-                value="{{ request('search') }}"
-                autocomplete="off"
-            />
-            @if (request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
-            @endif
-            @if (request('author'))
-                <input type="hidden" name="author" value="{{ request('author') }}">
-            @endif
+        <form action="/hall" method="get" 
+            class="flex items-center bg-white shadow-md rounded-lg overflow-visible">
+    
+            <!-- WRAPPER INPUT -->
+            <div class="relative w-full">
+                <input
+                    id="searchInput"
+                    name="search" 
+                    type="text"  
+                    class="w-full px-4 py-2 text-gray-700 focus:outline-none" 
+                    placeholder="Cari buku..." 
+                    value="{{ request('search') }}"
+                    autocomplete="off"
+                />
+
+                <!-- DROPDOWN -->
+                <div id="suggestions" 
+                    class="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg hidden z-50 border">
+                </div>
+            </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
                 <i class="fa-solid fa-search"></i>
             </button>
         </form>
+        <div id="suggestions" class="absolute w-full bg-white  shadow-md rounded-b-lg hidden z-50"></div>
     </div>
 
     @if ($books->count())
         <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto mb-18">
+        <div class="max-w-4xl mx-auto mb-18 ">
             <div class="overflow-hidden rounded-lg shadow-lg max-h-100">
                 @if ($books[0]->cover)
                     <img src="{{ Storage::url($books[0]->cover) }}" alt="Cover Buku" class="w-full h-96 object-cover">
@@ -121,4 +127,50 @@
     <div class="mt-6">
         {{ $books->links() }}
     </div>
+
+    <script>
+        const input = document.getElementById("searchInput");
+        const suggestions = document.getElementById("suggestions");
+
+        let timeout = null;
+
+        input.addEventListener("input", function () {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(async () => {
+                const query = input.value;
+
+                if (!query) {
+                    suggestions.classList.add("hidden");
+                    return;
+                }
+
+                const res = await fetch(`/search-suggestions?q=${query}`);
+                const data = await res.json();
+
+                suggestions.innerHTML = "";
+
+                if (data.length === 0) {
+                    suggestions.classList.add("hidden");
+                    return;
+                }
+
+                data.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
+                    div.textContent = item;
+
+                    div.onclick = () => {
+                        input.value = item;
+                        suggestions.classList.add("hidden");
+                    };
+
+                    suggestions.appendChild(div);
+                });
+
+                suggestions.classList.remove("hidden");
+            }, 300);
+        });
+    </script>
+    
 @endsection

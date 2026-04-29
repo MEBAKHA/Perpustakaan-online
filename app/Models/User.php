@@ -47,4 +47,23 @@ namespace App\Models;
     {
         return 'slug';
     }
+        public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+
+    public function stories()
+    {
+        return $this->hasMany(\App\Models\Story::class);
+    }
 }
