@@ -51,7 +51,7 @@
                         </p>
                         <div class="h-0 mt-6 mb-4 border-t-2 border-gray-200 border-dashed"></div>
                         <span class="block text-sm font-bold tracking-widest text-gray-500 uppercase">
-                            {{ $book->author->name }} | {{ optional($book->published_at)->diffForHumans() ?? 'Belum terbit' }}
+                            {{ $book->user->username }}
                         </span>
                     </div>    
                 @endforeach

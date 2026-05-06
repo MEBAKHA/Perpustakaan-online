@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -49,7 +49,8 @@ class BookController extends Controller
         $isAdmin = $user && ($user->isAdmin ?? false);
 
         $categories = Category::all();
-        $authors = Author::all();
+        $users = User::all();
+
 
         if ($isAdmin) {
             return view('dashboard.book.create', compact('categories', 'authors'));
@@ -69,12 +70,13 @@ class BookController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'body' => 'required',
+                'user' => 'required',
                 'category_id' => 'required',
             ];
 
             if ($isAdmin) {
                 $rules['slug'] = 'required|unique:books';
-                $rules['author_id'] = 'required';
+                $rules['user_id'] = 'required';                  
                 $rules['cover'] = 'image|max:1024';
                 $rules['published_at'] = 'date';
             }
@@ -118,14 +120,16 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
-    {
-        $title = "book | edit";
-        $categories = Category::all();
-        $authors = Author::all();
-        
-        return view('dashboard.book.edit', compact('title', 'book', 'categories', 'authors'));
-    }
+
+      public function edit(Book $book)
+        {
+            $title = "book | edit";
+            $categories = Category::all();
+            $users = User::all();
+            
+            return view('dashboard.book.edit', compact('title', 'book', 'categories', 'users'));
+        }
+
 
     /**
      * Update the specified resource in storage.
@@ -138,7 +142,7 @@ class BookController extends Controller
             'body' => 'required',
             'published_at' => 'date',
             'category_id' => 'required',
-            'author_id' => 'required'
+
             
         ];
 

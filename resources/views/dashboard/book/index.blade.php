@@ -6,7 +6,7 @@
         @session('success')
             <p class="bg-green-100 p-4 rounded text-green-800 border border-green-300 text-sm mb-7">{{ session('success') }}</p>
         @endsession
-        <a href="/dashboard/book/create" class="px-5 py-3 bg-sky-300 rounded-md text-gray-500 hover:bg-sky-400 transition">Tambah book</a>
+        <a href="" class="px-5 py-3 bg-sky-300 rounded-md text-gray-500 hover:bg-sky-400 transition">Tambah book</a>
     </div>
   </div>
 
@@ -54,7 +54,7 @@
                             <img class="w-11" src="{{ Storage::url($book->cover) }}" alt="">
                             </td>
                             <td class="px-6 py-4">
-                                {{ $book->category->name }}
+                             {{$book->user->name ?? 'Unknown User'}}
                             </td>
                             <td class="px-6 py-4 flex gap-2">
                                 <form action="/dashboard/book/{{ $book->slug }}" method="POST" class="text-red-500 hover:text-red-600">

@@ -142,7 +142,6 @@ Route::prefix('dashboard')
         Route::delete('/category/{category:slug}', [CategoryController::class, 'delete']);
 
         // Resources
-        Route::resource('author', AuthorController::class);
         Route::resource('user', UserController::class);
         Route::resource('book', BookController::class);
 

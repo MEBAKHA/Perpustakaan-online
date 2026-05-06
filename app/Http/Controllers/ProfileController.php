@@ -36,7 +36,7 @@ class ProfileController extends Controller
             $canEdit = $authUser->id === $user->id;
         }
 
-        return view('profile', compact('user', 'title', 'isFollowing', 'canEdit'));
+        return view('profile.profile', compact('user', 'title', 'isFollowing', 'canEdit'));
     }
 
     public function edit(){

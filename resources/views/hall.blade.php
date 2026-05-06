@@ -36,7 +36,7 @@
     @php $first = $feed->first(); @endphp
 
     <div class="max-w-4xl mx-auto mb-12">
-        <div class="overflow-hidden rounded-lg shadow-lg">
+        <div class="overflow-hidden w-full h-full shadow-lg">
             <a href="/hall/book/{{ $first->slug }}">
                 @if ($first instanceof \App\Models\Book)
                 
@@ -90,7 +90,6 @@
                        <a href="/hall/book/{{ $first->slug }}">
                          <img src="{{ $book->cover ? Storage::url($book->cover) : 'https://picsum.photos/400' }}">
                         </a>
-                        class="w-full h-56 object-cover">
 
                         <div class="p-4">
                             <h5 class="text-lg font-bold text-gray-800">

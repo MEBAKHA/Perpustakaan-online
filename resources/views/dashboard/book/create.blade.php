@@ -84,7 +84,7 @@
                 <option value=""></option>
                 @foreach ($authors as $author)
                     <option value="{{ $author->id }}" @selected(old('author_id' ?? '') == $author->id)>
-                    {{ $author->name }}
+                    {{$book->user->name  }}
                     </option>
                 @endforeach
             </select>

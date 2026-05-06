@@ -6,7 +6,11 @@
             <h2 class="text-3xl font-bold mb-2 capitalize">{{ $book->name }}</h2>
 
             <p class="text-gray-600 text-sm">
-               <a href="#" class="flex items-center gap-3 text-blue-600 hover:underline">
+               @if(auth()->check() && $book->user && $book->user->id == auth()->user()->id)
+               <a href="/profile" class="flex items-center gap-3 text-blue-600 hover:underline">
+               @else
+               <a href="/profile/{{ $book->user->username }}" class="flex items-center gap-3 text-blue-600 hover:underline">
+               @endif
 
                     <img src="{{ $book->user && $book->user->avatar 
                         ? asset('storage/' . $book->user->avatar) 

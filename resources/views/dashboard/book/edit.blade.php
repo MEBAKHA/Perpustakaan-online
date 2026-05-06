@@ -83,25 +83,19 @@
                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
             @enderror
         </div>
-        
-        <!-- author Select Field -->
-        <div>
-            <label for="author_id" class="block text-sm font-medium text-gray-700">Author</label>
-            <select name="author_id" id="author_id" required
-            class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('author_id') border-red-500 @enderror">
-                <option value=""></option>
-                @foreach ($authors as $author)
-                    @if (old('author_id', $book->author_id) == $author->id)
-                        <option value="{{ $author->id }}" selected>{{ $author->name }}</option>
-                    @else
-                        <option value="{{ $author->id }}">{{ $author->name }}</option>
-                    @endif
-                @endforeach
-            </select>
-            @error('author_id')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
+        <select name="user_id" class="form-control">
+          @foreach ($users as $user)
+              @if (old('user_id', $book->user_id) == $user->id)
+                  <option value="{{ $user->id }}" selected>
+                      {{ $user->name }}
+                  </option>
+              @else
+                  <option value="{{ $user->id }}">
+                      {{ $user->name }}
+                  </option>
+              @endif
+          @endforeach
+      </select>
         
   
         <!-- Submit Button -->
