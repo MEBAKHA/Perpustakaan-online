@@ -62,8 +62,12 @@ namespace App\Models;
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
     }
 
-    public function stories()
+    public function books()
     {
-        return $this->hasMany(\App\Models\Story::class);
+        return $this->hasMany(Book::class);
+    }
+        public function stories()
+    {
+        return $this->hasMany(Book::class)->where('type', 'story');
     }
 }

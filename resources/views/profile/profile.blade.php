@@ -101,12 +101,17 @@
 
         <!-- ACTIVITY -->
         <div class="md:col-span-2 space-y-4">
-            @foreach ($user->stories as $story)
+           @forelse ($user->stories ?? [] as $story)
                 <div class="bg-white p-4 rounded shadow mb-3">
-                    <h3 class="font-bold">{{ $story->title }}</h3>
-                    <p class="text-sm text-gray-600">{{ Str::limit($story->content, 100) ?? 'Belum ada cerita...' }}</p>
+                    <h3 class="font-bold">{{ $story->name }}</h3>
+
+                    <p class="text-sm text-gray-600">
+                        {{ \Illuminate\Support\Str::limit($story->body ?? 'Belum ada cerita...', 100) }}
+                    </p>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-gray-500">Belum ada cerita...</p>
+            @endforelse
         </div>
 
     </div>

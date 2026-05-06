@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User; 
+use App\Models\User;
 class ProfileController extends Controller
 {
+
     public function index()
     {
 
     $user = Auth::user(); // 🔥 WAJIB ADA
     $title = "Profile";
-
-    return view('/profile/profile', compact('user', 'title'));
+    $stories = $user->stories()->latest()->get();
+    return view('/profile/profile', compact('user', 'title', 'stories'));
 
     }
 

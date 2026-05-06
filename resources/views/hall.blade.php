@@ -1,176 +1,198 @@
 @extends('layouts.main')
 
 @section('konten')
-    {{-- Search Section --}}
-    <div class="max-w-3xl mx-auto mb-6">
-        <form action="/hall" method="get" 
-            class="flex items-center bg-white shadow-md rounded-lg overflow-visible">
-    
-            <!-- WRAPPER INPUT -->
-            <div class="relative w-full">
-                <input
-                    id="searchInput"
-                    name="search" 
-                    type="text"  
-                    class="w-full px-4 py-2 text-gray-700 focus:outline-none" 
-                    placeholder="Cari buku..." 
-                    value="{{ request('search') }}"
-                    autocomplete="off"
-                />
 
-                <!-- DROPDOWN -->
-                <div id="suggestions" 
-                    class="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg hidden z-50 border">
-                </div>
-            </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
-                <i class="fa-solid fa-search"></i>
-            </button>
-        </form>
-        <div id="suggestions" class="absolute w-full bg-white  shadow-md rounded-b-lg hidden z-50"></div>
-    </div>
+{{-- SEARCH --}}
+<div class="max-w-3xl mx-auto mb-6 relative">
+    <form action="/hall" method="get"
+        class="flex items-center bg-white shadow-md rounded-lg overflow-visible">
 
-    @if ($books->count())
-        <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto mb-18 ">
-            <div class="overflow-hidden rounded-lg shadow-lg max-h-100">
-                @if ($books[0]->cover)
-                    <img src="{{ Storage::url($books[0]->cover) }}" alt="Cover Buku" class="w-full h-96 object-cover">
-                @else
-                    <img src="https://picsum.photos/1200/400" alt="Cover Buku" class="w-full h-96 object-cover">
-                @endif
-            </div>
+        <div class="relative w-full">
+            <input
+                id="searchInput"
+                name="search"
+                type="text"
+                class="w-full px-4 py-2 text-gray-700 focus:outline-none"
+                placeholder="Cari buku / story..."
+                value="{{ request('search') }}"
+                autocomplete="off"
+            >
 
-            <div class="text-center mt-4">
-                <h3 class="text-2xl font-bold">
-                    <a href="/hall/book/{{ $books[0]->slug }}" class="text-gray-900 hover:text-blue-500 capitalize">
-                        {{ $books[0]->name }}
-                    </a>
-                </h3>
-
-                <div class="flex justify-center items-center text-gray-600 text-sm gap-4 mt-2">
-                    <span class="flex items-center gap-1">
-                        <i class="fa-solid fa-user text-blue-600"></i>
-                        <a href="/hall?author={{ $books[0]->author->slug }}" class="hover:text-blue-500">{{ $books[0]->author->name }}</a>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i class="fa-solid fa-bookmark text-green-500"></i>
-                        <a href="/hall?category={{ $books[0]->category->slug }}" class="hover:text-blue-500">{{ $books[0]->category->name }}</a>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i class="fa-solid fa-clock text-yellow-300"></i>
-                        {{ optional($books[0]->published_at)->diffForHumans() ?? 'Belum terbit' }}
-                    </span>
-                </div>
-
-                <p class="text-gray-700 mt-2">
-                    {{ Str::limit($books[0]->body, 150) }}
-                </p>
-
-                <a
-                    href="/hall/book/{{ $books[0]->slug }}"
-                    class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                    Read more
-                </a>
+            <div id="suggestions"
+                class="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg hidden z-50 border">
             </div>
         </div>
 
-        <!-- Content Section -->
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                @foreach ($books->skip(1) as $book)
-                    <!-- Card -->
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                        <div class="relative">
-                            @if ($book->cover)
-                                <img src="{{ Storage::url($book->cover) }}" class="w-full h-60 object-cover" alt="Book Cover">
-                            @else
-                                <img src="https://picsum.photos/400/400?random=1" class="w-full h-60 object-cover" alt="Book Cover">
-                            @endif
-                            <div class="absolute top-2 left-2 bg-black/70 text-white px-3 py-1 text-xs rounded">
-                                <a href="/hall?category={{ $book->category->slug }}" class="hover:underline">{{ $book->category->name }}</a>
-                            </div>
-                        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
+            <i class="fa-solid fa-search"></i>
+        </button>
+    </form>
+</div>
+
+{{-- CONTENT --}}
+@if ($feed->count())
+
+    {{-- HERO --}}
+    @php $first = $feed->first(); @endphp
+
+    <div class="max-w-4xl mx-auto mb-12">
+        <div class="overflow-hidden rounded-lg shadow-lg">
+            <a href="/hall/book/{{ $first->slug }}">
+                @if ($first instanceof \App\Models\Book)
+                
+                    <img src="{{ $first->cover ? Storage::url($first->cover) : 'https://picsum.photos/1200/400' }}"
+                        class="w-full h-80 object-cover">
+                @else
+                    <img src="https://picsum.photos/1200/400?random=story"
+                        class="w-full h-80 object-cover">
+                @endif
+
+            </a>
+
+        </div>
+
+        <div class="text-center mt-4">
+
+            <h3 class="text-2xl font-bold text-gray-800">
+
+                @if ($first instanceof \App\Models\Book)
+                    <a href="/hall/book/{{ $first->slug }}">
+                        📚 {{ $first->name }}
+                    </a>
+                @else
+                    ✍️ {{ $first->title }}
+                @endif
+
+            </h3>
+
+            <p class="text-gray-600 mt-2 max-w-xl mx-auto">
+                @if ($first instanceof \App\Models\Book)
+                    {{ \Illuminate\Support\Str::limit($first->body, 150) }}
+                @else
+                    {{ \Illuminate\Support\Str::limit($first->content, 150) }}
+                @endif
+            </p>
+
+        </div>
+    </div>
+
+    {{-- GRID --}}
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+            @foreach ($feed->skip(1) as $book)
+
+                {{-- BOOK --}}
+                @if ($book instanceof \App\Models\Book)
+
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
+
+                       <a href="/hall/book/{{ $first->slug }}">
+                         <img src="{{ $book->cover ? Storage::url($book->cover) : 'https://picsum.photos/400' }}">
+                        </a>
+                        class="w-full h-56 object-cover">
+
                         <div class="p-4">
-                            <h5 class="text-lg font-bold">
-                                <a href="/hall/book/{{ $book->slug }}" class="hover:text-blue-500 capitalize">{{ $book->name }}</a>
+                            <h5 class="text-lg font-bold text-gray-800">
+                                📚 {{ $book->name }}
                             </h5>
-                            <div class="flex items-center text-gray-600 text-sm gap-4 mt-2">
-                                <span class="flex items-center gap-1">
-                                    <i class="fa-solid fa-user text-blue-600"></i>
-                                    <a href="/hall?author={{ $book->author->slug }}" class="hover:text-blue-500">{{ $book->author->name }}</a>
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <i class="fa-solid fa-clock text-yellow-300"></i>
-                                    {{ optional($book->published_at)->diffForHumans() ?? 'Belum terbit' }}
-                                </span>
-                            </div>
-                            <p class="text-gray-700 mt-2">
-                                {{ Str::limit($book->body, 150) }}
+
+                            <p class="text-sm text-gray-600 mt-2">
+                                {{ \Illuminate\Support\Str::limit($book->body, 100) }}
                             </p>
-                            <a href="/hall/book/{{ $book->slug }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                                Read more
+
+                            <a href="/hall/book/{{ $book->slug }}"
+                                class="mt-3 inline-block text-sm text-blue-500 hover:underline">
+                                Read more →
                             </a>
                         </div>
+
                     </div>
-                    {{-- card penutup --}}
-                @endforeach
-            </div>
+
+                {{-- STORY --}}
+                @else
+
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
+
+                       <a href="">
+                          <img src="https://picsum.photos/400?random={{ $loop->index }}"
+                            class="w-full h-56 object-cover">
+
+                       </a>
+                        <div class="p-4">
+                            <h5 class="text-lg font-bold text-gray-800">
+                                ✍️ {{ $book->title }}
+                            </h5>
+
+                            <p class="text-sm text-gray-600 mt-2">
+                                {{ \Illuminate\Support\Str::limit($book->content, 100) }}
+                            </p>
+
+                            <span class="text-xs text-gray-500 block mt-2">
+                                by {{ $book->user->name ?? 'User' }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                @endif
+
+            @endforeach
+
         </div>
-    @else
-        <p class="text-center text-gray-600 mt-25">Tidak ada data buku.</p>
-    @endif
-
-
-    {{-- pagination --}}
-    <div class="mt-6">
-        {{ $books->links() }}
     </div>
 
-    <script>
-        const input = document.getElementById("searchInput");
-        const suggestions = document.getElementById("suggestions");
+@else
+    <p class="text-center text-gray-600 mt-20">
+        Tidak ada data...
+    </p>
+@endif
 
-        let timeout = null;
 
-        input.addEventListener("input", function () {
-            clearTimeout(timeout);
+{{-- SEARCH SCRIPT --}}
+<script>
+const input = document.getElementById("searchInput");
+const suggestions = document.getElementById("suggestions");
 
-            timeout = setTimeout(async () => {
-                const query = input.value;
+let timeout = null;
 
-                if (!query) {
-                    suggestions.classList.add("hidden");
-                    return;
-                }
+input.addEventListener("input", function () {
+    clearTimeout(timeout);
 
-                const res = await fetch(`/search-suggestions?q=${query}`);
-                const data = await res.json();
+    timeout = setTimeout(async () => {
+        const query = input.value;
 
-                suggestions.innerHTML = "";
+        if (!query) {
+            suggestions.classList.add("hidden");
+            return;
+        }
 
-                if (data.length === 0) {
-                    suggestions.classList.add("hidden");
-                    return;
-                }
+        const res = await fetch(`/search-suggestions?q=${query}`);
+        const data = await res.json();
 
-                data.forEach(item => {
-                    const div = document.createElement("div");
-                    div.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
-                    div.textContent = item;
+        suggestions.innerHTML = "";
 
-                    div.onclick = () => {
-                        input.value = item;
-                        suggestions.classList.add("hidden");
-                    };
+        if (data.length === 0) {
+            suggestions.classList.add("hidden");
+            return;
+        }
 
-                    suggestions.appendChild(div);
-                });
+        data.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
+            div.textContent = item;
 
-                suggestions.classList.remove("hidden");
-            }, 300);
+            div.onclick = () => {
+                input.value = item;
+                suggestions.classList.add("hidden");
+            };
+
+            suggestions.appendChild(div);
         });
-    </script>
-    
+
+        suggestions.classList.remove("hidden");
+    }, 300);
+});
+</script>
+
 @endsection

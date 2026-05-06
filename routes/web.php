@@ -107,8 +107,8 @@ Route::get('/borrow/detail/{borrow}', [BorrowController::class, 'detail'])
 |--------------------------------------------------------------------------
 */
     Route::middleware('auth')->group(function () {
-        Route::get('/story/create', [StoryController::class, 'create'])->name('story.create');
-        Route::post('/story', [StoryController::class, 'store'])->name('story.store');
+        Route::get('/story/create', [BookController::class, 'create'])->name('story.create');
+        Route::post('/story', [BookController::class, 'store'])->name('story.store');
     });
 
 /*

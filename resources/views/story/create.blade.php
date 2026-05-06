@@ -9,6 +9,9 @@
             📚 Create New Book
         </h2>
 
+        <form action="{{ route('story.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
         <div class="grid md:grid-cols-3 gap-6">
 
             <!-- COVER -->
@@ -20,7 +23,7 @@
                     <label class="flex flex-col items-center cursor-pointer z-10">
                         <i class="fa-solid fa-image text-4xl text-gray-400 mb-2"></i>
                         <span class="text-gray-500 text-sm">Upload Cover</span>
-                        <input type="file" class="hidden" onchange="previewCover(event)">
+                        <input type="file" name="cover" class="hidden" onchange="previewCover(event)">
                     </label>
 
                     @error('cover')
@@ -101,13 +104,12 @@
         <br>
         
         <!-- Submit Button -->
-        <div class=" justify-center items-center">
+        <div class="justify-center items-center">
           <button type="submit"
             class="inline-flex items-center px-12 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             Create
           </button>
-        </div>
-    </div>
+        </div>        </form>    </form>
 </div>
 
 <script>

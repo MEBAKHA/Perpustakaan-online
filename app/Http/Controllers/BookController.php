@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
@@ -44,36 +45,67 @@ class BookController extends Controller
      */
     public function create()
     {
-        $title = "book | create";
+        $user = Auth::user();
+        $isAdmin = $user && ($user->isAdmin ?? false);
+
         $categories = Category::all();
         $authors = Author::all();
 
-        return view('dashboard.book.create', compact('title', 'categories', 'authors'));
+        if ($isAdmin) {
+            return view('dashboard.book.create', compact('categories', 'authors'));
+        } else {
+            return view('story.create', compact('categories')); // 🔥 view user
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required | max:255',
-            'slug' => 'required |max:255 | unique:books',
-            'cover' => 'image|file|max:1024',
-            'body' => 'required',
-            'published_at' => 'date',
-            'category_id' => 'required',
-            'author_id' => 'required'
-        ]);
+        public function store(Request $request)
+        {
+            $user = Auth::user();
+            $isAdmin = $user && ($user->isAdmin ?? false);
 
-        if($request->file('cover')) {
-            $validatedData['cover'] = $request->file('cover')->store('cover-buku','public');
+            $rules = [
+                'name' => 'required|max:255',
+                'body' => 'required',
+                'category_id' => 'required',
+            ];
+
+            if ($isAdmin) {
+                $rules['slug'] = 'required|unique:books';
+                $rules['author_id'] = 'required';
+                $rules['cover'] = 'image|max:1024';
+                $rules['published_at'] = 'date';
+            }
+
+            $validated = $request->validate($rules);
+
+            // 🔥 AUTO TAMBAHAN
+            $validated['user_id'] = $user->id;
+            $validated['type'] = $isAdmin ? 'book' : 'story';
+
+            // 🔥 FIX ERROR AUTHOR_ID
+            if (!$isAdmin) {
+                $validated['author_id'] = 1; // sementara pakai default author
+                // atau nanti kita bikin author dari user
+            }
+
+            // 🔥 AUTO SLUG USER
+            if (!$isAdmin) {
+                $validated['slug'] = Str::slug($validated['name']) . '-' . time();
+            }
+
+            if ($request->hasFile('cover')) {
+                $validated['cover'] = $request->file('cover')->store('cover-buku', 'public');
+            }
+
+            Book::create($validated);
+
+            return redirect(
+                $isAdmin ? '/dashboard/book' : '/profile'
+            )->with('success', $isAdmin ? 'Book berhasil dibuat!' : 'Story berhasil dibuat!');
         }
-        
-        Book::create($validatedData);
-
-        return redirect ('/dashboard/book')->with('success', 'Data buku berhasil ditambahkan!');
-    }
 
     /**
      * Display the specified resource.
@@ -143,5 +175,7 @@ class BookController extends Controller
         return redirect('/dashboard/book')->with('success', 'Data buku berhasil dihapus!');
 
     }
+
+    
 
 }

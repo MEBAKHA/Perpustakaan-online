@@ -7,11 +7,14 @@
 
             <p class="text-gray-600 text-sm">
                <a href="#" class="flex items-center gap-3 text-blue-600 hover:underline">
-                    <img src="{{ $book->author->avatar ? asset('storage/' . $book->author->avatar) : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+
+                    <img src="{{ $book->user && $book->user->avatar 
+                        ? asset('storage/' . $book->user->avatar) 
+                        : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
                         class="w-10 h-10 rounded-full object-cover shadow-md">
 
                     <span class="text-gray-800 hover:text-blue-600 transition">
-                        {{ $book->author->name }}
+                        {{ $book->user->name ?? 'Unknown User' }}
                     </span>
 
                 </a>

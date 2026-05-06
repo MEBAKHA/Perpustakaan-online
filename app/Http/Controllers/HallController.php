@@ -5,35 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Story;
+use Illuminate\Http\Request;
 
 class HallController extends Controller
 {
-    public function index()
+public function index(Request $request)
+{
+    $title = 'Hall';
+
+    // 🔵 SEMUA DATA (BOOK + STORY)
+    $feed = Book::latest()
+        ->search($request->only(['search', 'category', 'author']))
+        ->get()
+        ->sortByDesc('created_at')
+        ->values();
+
+    return view('hall', compact('title', 'feed'));
+}
+
+    public function singleBook(Book $book)
     {
-        $title = '';
-
-        if (request('category')) {
-            $category = Category::where('slug', request('category'))->first();
-            $title = " of " . $category->name;
-        }
-        if (request('author')) {
-            $author = Author::where('slug', request('author'))->first();
-            $title = " by " . $author->name;
-        }
-
-        $title = 'Hall ' . $title;
-
-        $books = Book::latest()
-                ->search(request(['search', 'category', 'author']))
-                ->paginate(10)
-                ->withQueryString();
-
-        return view('hall', compact('title', 'books'));
-    }
-
-    public function singleBook(Book $book) {
         $title = $book->name;
-        
         return view('book', compact('title', 'book'));
     }
+
+    
 }
