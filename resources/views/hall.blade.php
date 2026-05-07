@@ -13,7 +13,7 @@
                 name="search"
                 type="text"
                 class="w-full px-4 py-2 text-gray-700 focus:outline-none"
-                placeholder="Cari buku / story..."
+                placeholder="Cari buku / story / user..."
                 value="{{ request('search') }}"
                 autocomplete="off"
             >
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hover:text-white hover:px-8 transition-all">
             <i class="fa-solid fa-search"></i>
         </button>
     </form>
@@ -37,11 +37,11 @@
 
     <div class="max-w-4xl mx-auto mb-12">
         <div class="overflow-hidden w-full h-full shadow-lg">
-            <a href="/hall/book/{{ $first->slug }}">
+            <a  href="/hall/book/{{ $first->slug }}">
                 @if ($first instanceof \App\Models\Book)
                 
-                    <img src="{{ $first->cover ? Storage::url($first->cover) : 'https://picsum.photos/1200/400' }}"
-                        class="w-full h-80 object-cover">
+                    <img  src="{{ $first->cover ? Storage::url($first->cover) : 'https://picsum.photos/1200/400' }}"
+                        class="w-full h-80 object-cover hover:scale-105 hover:px-7 hover:py-7 hover:bg-black transition-all duration-1000">
                 @else
                     <img src="https://picsum.photos/1200/400?random=story"
                         class="w-full h-80 object-cover">
@@ -57,7 +57,7 @@
 
                 @if ($first instanceof \App\Models\Book)
                     <a href="/hall/book/{{ $first->slug }}">
-                        📚 {{ $first->name }}
+                         {{ $first->name }}
                     </a>
                 @else
                     ✍️ {{ $first->title }}
@@ -85,15 +85,15 @@
                 {{-- BOOK --}}
                 @if ($book instanceof \App\Models\Book)
 
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg hover:scale-105 hover:bg-blue-200 hover:px-7 hover:py-7 transition-all duration-1000 ">
 
-                       <a href="/hall/book/{{ $first->slug }}">
+                       <a href="/hall/book/{{ $book->slug }}">
                          <img src="{{ $book->cover ? Storage::url($book->cover) : 'https://picsum.photos/400' }}">
                         </a>
 
                         <div class="p-4">
                             <h5 class="text-lg font-bold text-gray-800">
-                                📚 {{ $book->name }}
+                                {{ $book->name }}
                             </h5>
 
                             <p class="text-sm text-gray-600 mt-2">
@@ -101,7 +101,7 @@
                             </p>
 
                             <a href="/hall/book/{{ $book->slug }}"
-                                class="mt-3 inline-block text-sm text-blue-500 hover:underline">
+                                class="mt-3 inline-block text-sm text-blue-900 bg-blue-300 py-2 px-4 hover:bg-blue-700 hover:text-white hover:px-8 hover:py-2 hover:scale-105 hover:rounded-4xl transition-all duration-500 ">
                                 Read more →
                             </a>
                         </div>
