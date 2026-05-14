@@ -41,8 +41,9 @@
                     @if ($book->status == 1)
                         <a href="" onclick="alert('buku sedang di pinjamkan')"
                             class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                            <i class="fa-solid fa-book-open-reader"></i>
-                            Pinjam Buku
+                            <i class="fa-solid fa-repeat"></i>
+                            posting ulang
+                           
                         </a>
                     @else
                         <form action="/borrow" method="POST">
@@ -51,8 +52,8 @@
                             @csrf
                             <button type="submit"
                                 class=" inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                                <i class="fa-solid fa-book-open-reader"></i>
-                                Pinjam Buku
+                               <i class="fa-solid fa-repeat"></i>
+                                Memosting ulang
                             </button>
                         </form>
                     @endif
@@ -60,7 +61,8 @@
                     <a href="/login"
                         class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                         <i class="fa-solid fa-book-open-reader"></i>
-                        Pinjam Buku
+                       <i class="fa-solid fa-repeat"></i>
+                       Posting ulang
                     </a>
 
 

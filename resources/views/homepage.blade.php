@@ -6,7 +6,7 @@
     <section class="pt-10 bg-gray-100 sm:pt-16 lg:pt-24">
         <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
             <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl lg:leading-tight">hello  <span class="text-black  hover:bg-cyan-900 hover:text-cyan-300 in-hover:text-amber-400 hover:underline transition-all duration-300">{{ auth()->user()?->username ?? 'Guest' }}</span> selamat datang di Litemari <span class=" text-7xl animate-pulse">👋</span></h2>
+                <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl lg:leading-tight">hello  <span class="text-black  hover:bg-cyan-900 hover:text-cyan-300 in-hover:text-amber-400 hover:underline transition-all duration-300">{{ auth()->user()?->username ?? 'Guest' }}</span> selamat datang di Horeampedia <span class=" text-7xl animate-pulse">👋</span></h2>
                 <p class="mt-6 text-lg text-gray-900">"tempat membaca, menulis, dan berbagi cerita"</p>
                 <a href="{{auth()->check() && auth()->user()->role == 'admin' ? route('dashboard') : (auth()->check() && auth()->user()->role == 'user' ? route('hall') : route('login'))}}" title="" class="inline-flex items-center justify-center px-6 py-4 mt-12 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-cyan-400" role="button">
                   <i class="fa-solid fa-book-open mr-2"></i> 

@@ -6,7 +6,7 @@
     <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
         <h2 class="text-2xl font-bold mb-6 text-gray-800">
-            📚 Create New Book
+          Create New Story
         </h2>
 
         <form action="{{ route('story.store') }}" method="POST" enctype="multipart/form-data">

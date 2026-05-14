@@ -2,16 +2,16 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
-            <div class="shrink-0">
-                <a class=" text-amber-50 font-bold text-2xl" href="/">LITEMARI📕</a>     
+            <div class="shrink-0 flex items-center">
+               <img class=" h-10 w-auto" src="{{ asset('img/logo (2).png') }}" alt="">
             </div>
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                    <a href="/" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page">🏠 Homepage</a>
-                    <a href="/hall" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> Hall</a>
+                    <a href="/" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page"><i class="fa-solid fa-house"></i> Homepage</a>
+                    <a href="/hall" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-border-all"></i> Hall</a>
                     @auth
-                        <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">borrows</a>
+                        <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
                     @endauth
                 </div>
             </div>
@@ -52,7 +52,7 @@
                         <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
                         <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"> <i class="fa-solid fa-circle-user"></i> {{ auth()->user()->name }}</a>
                         @if (auth()->user()->role == 'admin')
-                            <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0">Dashboard</a>
+                            <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"><i class="fa-solid fa-display"></i> Dashboard</a>
                         @endif
                         <a href="{{ route('story.create') }}" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600  hover:bg-gray-100 transition "> <i class="fa-solid fa-plus"></i> create Story</a>
                         <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"><i class="fa-solid fa-circle-info mr-2"></i>About</a>

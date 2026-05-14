@@ -40,7 +40,7 @@
         @if ($first instanceof \App\Models\Book)
 
             <img src="{{ $first->cover ? Storage::url($first->cover) : 'https://picsum.photos/1200/400' }}"
-                class="w-full h-max object-cover hover:scale-105 transition-all duration-700">
+                class="w-full h-max object-cover hover:scale-105 hover:opacity-90 hover:brightness-90 hover:rotate-2 transition-all duration-700 ease-in-out">
 
         @else
 
@@ -73,10 +73,7 @@
             </a>
             <div class="text-center mt-4 right-4">
         
-                <h3 class="text-2xl font-bold text-gray-800">
-        
-        
-        
+                <h3 class="text-2xl font-bold bg-gray-200/50 px-4 py-5 text-shadow-2xs text-shadow-white ">
                     @if ($first instanceof \App\Models\Book)
                         <a href="/hall/book/{{ $first->slug }}">
                              {{ $first->name }}
@@ -98,7 +95,7 @@
                 </p>
 
                 <a href="/hall/book/{{ $first->slug }}"
-                    class="mt-3 inline-block text-sm text-7xl text-blue-900 bg-blue-300 py-5 px-10 hover:bg-blue-700 hover:text-white hover:px-14 hover:scale-105 hover:rounded-4xl transition-all duration-500">
+                    class="mt-3 inline-block text-sm text-7xl text-blue-900 bg-blue-300 py-5 px-10 hover:bg-blue-700 hover:text-white hover:px-14 hover:scale-105 hover:rounded-4xl transition-all duration-500 ">
                     Read more →
                 </a>
 
@@ -108,7 +105,7 @@
         
     </div>
 
-    </div>
+<br>
 
     {{-- GRID --}}
     <div class="max-w-6xl mx-auto px-4">
@@ -119,18 +116,21 @@
                 {{-- BOOK --}}
                 @if ($book instanceof \App\Models\Book)
 
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg hover:scale-105 hover:bg-blue-200 hover:px-7 hover:py-7 transition-all duration-1000 ">
+                    <!-- 1. Tambahkan kelas 'group' pada div induk -->
+                    <div class="group bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg hover:scale-105 hover:bg-black hover:px-7 hover:py-7 transition-all duration-1000 ">
 
-                       <a href="/hall/book/{{ $book->slug }}">
-                         <img src="{{ $book->cover ? Storage::url($book->cover) : 'https://picsum.photos/400' }}">
+                        <a href="/hall/book/{{ $book->slug }}">
+                            <img src="{{ $book->cover ? Storage::url($book->cover) : 'https://picsum.photos/400' }}" class="w-full">
                         </a>
 
                         <div class="p-4">
-                            <h5 class="text-lg font-bold text-gray-800">
+                            <!-- 2. Tambahkan 'group-hover:text-white' pada judul -->
+                            <h5 class="text-lg font-bold text-gray-800 group-hover:text-white transition-colors duration-1000">
                                 {{ $book->name }}
                             </h5>
 
-                            <p class="text-sm text-gray-600 mt-2">
+                            <!-- 3. Tambahkan 'group-hover:text-gray-200' pada deskripsi agar kontras -->
+                            <p class="text-sm text-gray-600 mt-2 group-hover:text-gray-200 transition-colors duration-1000">
                                 {{ \Illuminate\Support\Str::limit($book->body, 100) }}
                             </p>
 
@@ -141,6 +141,7 @@
                         </div>
 
                     </div>
+
 
                 {{-- STORY --}}
                 @else
@@ -225,6 +226,27 @@ input.addEventListener("input", function () {
 
         suggestions.classList.remove("hidden");
     }, 300);
+});
+</script>
+
+<script>
+var swiper = new Swiper(".mySwiper", {
+    loop: true,
+
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
+
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    },
+
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
 });
 </script>
 

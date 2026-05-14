@@ -62,7 +62,7 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-        public function store(Request $request)
+       public function store(Request $request)
         {
             $user = Auth::user();
             $isAdmin = $user && ($user->isAdmin ?? false);
@@ -70,45 +70,52 @@ class BookController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'body' => 'required',
-                'user' => 'required',
                 'category_id' => 'required',
             ];
 
+            // VALIDASI KHUSUS ADMIN
             if ($isAdmin) {
                 $rules['slug'] = 'required|unique:books';
-                $rules['user_id'] = 'required';                  
+                $rules['user_id'] = 'required';
                 $rules['cover'] = 'image|max:1024';
                 $rules['published_at'] = 'date';
             }
 
             $validated = $request->validate($rules);
 
-            // 🔥 AUTO TAMBAHAN
+            // AUTO USER LOGIN
             $validated['user_id'] = $user->id;
+
+            // TYPE
             $validated['type'] = $isAdmin ? 'book' : 'story';
 
-            // 🔥 FIX ERROR AUTHOR_ID
+            // AUTHOR DEFAULT UNTUK STORY
             if (!$isAdmin) {
-                $validated['author_id'] = 1; // sementara pakai default author
-                // atau nanti kita bikin author dari user
+                $validated['author_id'] = 1;
             }
 
-            // 🔥 AUTO SLUG USER
+            // AUTO SLUG UNTUK STORY
             if (!$isAdmin) {
                 $validated['slug'] = Str::slug($validated['name']) . '-' . time();
             }
 
+            // UPLOAD COVER
             if ($request->hasFile('cover')) {
                 $validated['cover'] = $request->file('cover')->store('cover-buku', 'public');
             }
 
+            // SIMPAN DATA
             Book::create($validated);
 
-            return redirect(
-                $isAdmin ? '/dashboard/book' : '/profile'
-            )->with('success', $isAdmin ? 'Book berhasil dibuat!' : 'Story berhasil dibuat!');
+            // REDIRECT
+            if ($isAdmin) {
+                return redirect('/dashboard/book')
+                    ->with('success', 'Book berhasil dibuat!');
+            } else {
+                return redirect('/hall')
+                    ->with('success', 'Story berhasil dibuat!');
+            }
         }
-
     /**
      * Display the specified resource.
      */
