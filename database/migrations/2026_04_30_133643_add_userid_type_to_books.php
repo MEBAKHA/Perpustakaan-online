@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->enum('type', ['book', 'story'])->default('book');
-        });
+        if (! Schema::hasColumn('books', 'user_id') || ! Schema::hasColumn('books', 'type')) {
+            Schema::table('books', function (Blueprint $table) {
+                if (! Schema::hasColumn('books', 'user_id')) {
+                    $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
+                }
+
+                if (! Schema::hasColumn('books', 'type')) {
+                    $table->enum('type', ['book', 'story'])->default('book');
+                }
+            });
+        }
     }
 
     /**

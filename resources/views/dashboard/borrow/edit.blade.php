@@ -48,6 +48,15 @@
               <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
             @enderror
         </div>
+        <!-- description Field -->
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Caption Posting Ulang</label>
+            <textarea name="description" id="description" rows="4" class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('description') border-red-500 @enderror">{{ old('description', $borrow->description) }}</textarea>
+            @error('description')
+            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
+
         <!-- status Select Field -->
         <div>
             <label  for="status" class="block text-sm font-medium text-gray-700">Status</label>
@@ -65,9 +74,8 @@
         </div>
           <!-- message Field -->
         <div class="hidden" id="messageField">
-          <label for="message" class=" block text-sm font-medium text-gray-700">pesan</>
-          <textarea type="text" name="message"class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('message') border-red-500 @enderror">
-          </textarea>
+          <label for="message" class=" block text-sm font-medium text-gray-700">pesan</label>
+          <textarea type="text" name="message" class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('message') border-red-500 @enderror">{{ old('message', $borrow->message) }}</textarea>
           @error('message')
             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
           @enderror

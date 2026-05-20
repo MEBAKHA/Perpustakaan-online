@@ -14,7 +14,7 @@
                         <a href="/people" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"><i class="fa-solid fa-person mr-2"></i>People</a>
                     @endauth
                     @auth
-                    <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
+                    <a href="{{ route('borrows.feed') }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
                     @endauth
                 </div>
             </div>
@@ -97,7 +97,7 @@
                 <a href="/" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page">Homepage</a>
                 <a href="/hall" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">Hall</a>
                 @auth
-                    <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
+                    <a href="{{ route('borrows.feed') }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
                 @endauth
                 <a href="/about" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">About</a>
                 @auth

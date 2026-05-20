@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Repost;
 
 class Book extends Model
 {
@@ -16,7 +17,7 @@ class Book extends Model
         'published_at' => 'datetime',
     ];
 
-    protected $with = ['author', 'category'];
+    protected $with = ['author', 'category', 'reposts'];
     protected function search(Builder $query, $filters)
     {
         $query->when(
@@ -58,6 +59,14 @@ class Book extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Reposts / borrows (posting ulang) relationship
+     */
+    public function borrows()
+    {
+        return $this->hasMany(\App\Models\Borrow::class);
+    }
+
     // Di dalam file app/Models/Book.php
 
     public function scopeSearch($query, array $filters)
@@ -75,4 +84,10 @@ class Book extends Model
         });
     }
 
+    public function reposts()
+    {
+        return $this->hasMany(Repost::class);
+    }
+
+   
 }

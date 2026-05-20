@@ -107,12 +107,25 @@ Route::get('/profile/{username}', [ProfileController::class, 'show'])
 
 Route::post('/borrow', [BorrowController::class, 'store']);
 
+Route::get('/borrows', [BorrowController::class, 'feed'])
+    ->middleware('auth')
+    ->name('borrows.feed');
+
 Route::get('/borrows/{user:slug}', [BorrowController::class, 'userBorrows'])
     ->middleware('auth')
     ->name('borrows');
 
+Route::delete('/borrow/{borrow}/cancel', [BorrowController::class, 'cancel'])
+    ->middleware('auth')
+    ->name('borrow.cancel');
+
+Route::post('/borrow/{borrow}/comment', [BorrowController::class, 'comment'])
+    ->middleware('auth')
+    ->name('borrow.comment');
+
 Route::get('/borrow/detail/{borrow}', [BorrowController::class, 'detail'])
-    ->middleware('auth');
+    ->middleware('auth')
+    ->name('borrow.detail');
 /*    
 |--------------------------------------------------------------------------
 | Story
@@ -142,8 +155,20 @@ Route::get('/search-suggestions', [BookController::class, 'suggestions']);
 
 Route::get('/people', [peopleController::class, 'index'])
     ->name('people');
+    
 
-/*
+
+    //repost
+ 
+
+   Route::get('/books/{book}/repost', function ($book) {
+        return redirect()->back();
+    });
+
+    Route::post('/books/{book}/repost', [BookController::class, 'repost'])
+        ->middleware('auth');
+    /*
+
 |--------------------------------------------------------------------------
 | DASHBOARD (ADMIN)
 |--------------------------------------------------------------------------

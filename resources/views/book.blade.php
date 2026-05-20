@@ -36,48 +36,39 @@
             <article class="prose max-w-none my-6">
                 {!! $book->body !!}
             </article>
+                @php
+                    $sudahRepost = $book->reposts
+                        ->where('user_id', auth()->user()->id)
+                        ->count();
+                @endphp
 
-            {{-- ACTION --}}
-            <div class="flex items-center gap-5 text-2xl mb-5">
-                <i class="fa-regular fa-star"></i>
-                <i class="fa-solid fa-share"></i>
-                <i class="fa-solid fa-comment"></i>
-                <i class="fa-solid fa-repeat"></i>
-            </div>
-            <div class=" flex justify-between items-center">
-                <a href="/hall" class="inline-block text-blue-500 hover:underline mt-4">← Back to blog</a>
-                @auth
-                    @if ($book->status == 1)
-                        <a href="" onclick="alert('buku sedang di pinjamkan')"
-                            class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                <form action="{{ url('/books/' . $book->id . '/repost') }}" method="POST">
+                    @csrf
+
+                    @if ($sudahRepost)
+
+                        <button
+                            type="submit"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+
                             <i class="fa-solid fa-repeat"></i>
-                            posting ulang
+                            Sedang Memposting Ulang
 
-                        </a>
+                        </button>
+
                     @else
-                        <form action="/borrow" method="POST">
-                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" name="book_id" value="{{ $book->id }}">
-                            @csrf
-                            <button type="submit"
-                                class=" inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                                <i class="fa-solid fa-repeat"></i>
-                                Memosting ulang
-                            </button>
-                        </form>
+
+                        <button
+                            type="submit"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded">
+
+                            <i class="fa-solid fa-repeat"></i>
+                            Posting Ulang
+
+                        </button>
+
                     @endif
-                @else
-                    <a href="/login"
-                        class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                        <i class="fa-solid fa-book-open-reader"></i>
-                        <i class="fa-solid fa-repeat"></i>
-                        Posting ulang
-                    </a>
-
-
-                @endauth
-
-            </div>
+                </form>
         </div>
     </div>
 @endsection

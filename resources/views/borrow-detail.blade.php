@@ -1,129 +1,112 @@
 @extends('layouts.main')
 
 @section('konten')
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-5xl p-4 my-10">
-            
-            <h1 class="text-center text-2xl mb-4">
-                Detail Tiket Peminjaman ID: {{ $borrow->id }}
-            </h1>
-            <hr>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-4">
+<div class="max-w-4xl mx-auto py-8 px-4">
 
-                <!-- Grid 1 -->
-                <div class="bg-white md:p-6 rounded">
-                    <h2 class="text-lg font-bold mb-4">Detail Peminjaman</h2>
-                    @if ($borrow->status == "diajukan")
-                        <span class="px-2 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 capitalize">{{ $borrow->status }}</span>
-                    @elseif ($borrow->status == "dipinjam")
-                        <span class="px-2 text-xs font-semibold rounded-full bg-green-100 text-green-800 capitalize">{{ $borrow->status }}</span>
-                    @elseif ($borrow->status == "dikembalikan")
-                        <span class="px-2 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 capitalize">{{ $borrow->status }}</span>
-                    @elseif ($borrow->status == "ditolak")
-                        <span class="px-2 text-xs font-semibold rounded-full bg-red-100 text-red-800 capitalize">{{ $borrow->status }}</span>
-                    @endif
-                </div>
+    <h1 class="text-3xl font-bold mb-8">
+        🔁 Posting Ulang
+    </h1>
 
-                <!-- Grid 2 -->
-                <div class="bg-white md:p-6 rounded"></div>
+    <div class="space-y-6">
 
-                <!-- Grid 3 -->
-                <div class="bg-white md:p-6 rounded">
-                    <h2 class="text-lg font-bold mb-4">Detail Buku</h2>
+        @forelse ($reposts as $repost)
 
-                    <div class="space-y-2 text-sm">
-                        <div class="flex">
-                            <div class="w-40">Judul</div>
-                            <div class="font-semibold capitalize">{{ $borrow->book->name }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-40">Penulis</div>
-                            <div class="font-semibold">{{ $borrow->book->author->name }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-40">Tanggal Terbit</div>
-                            <div class="font-semibold">{{ $borrow->book->published_at ? $borrow->book->published_at->format('d M Y') : "Belum terbit" }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-40">Cover</div>
-                            <div class="font-semibold"></div>
-                        </div>
-                        @if ($borrow->book->cover)
-                            <img src="{{ Storage::url($borrow->book->cover) }}" alt="">
-                        @else
-                            <img src="https://picsum.photos/300?random=10" class="rounded shadow">
-                        @endif
-                    </div>
-                </div>
+            <div class="bg-white rounded-3xl shadow border overflow-hidden">
 
-                <!-- Grid 4 -->
-                <div class="bg-white md:p-6 rounded">
-                    <h2 class="text-lg font-bold mb-4">Detail Peminjam</h2>
+                {{-- HEADER --}}
+                <div class="p-5 flex items-center gap-4">
 
-                    <div class="space-y-2 text-sm">
-                        <div class="flex">
-                            <div class="w-40">Nama</div>
-                            <div class="font-semibold">{{ $borrow->user->name }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-40">Email</div>
-                            <div class="font-semibold">{{ $borrow->user->email }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-40">Role</div>
-                            <div class="font-semibold">{{ $borrow->user->role }}</div>
-                        </div>
+                    <img
+                        src="{{ $repost->user->avatar
+                            ? asset('storage/' . $repost->user->avatar)
+                            : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+                        class="w-14 h-14 rounded-full object-cover">
+
+                    <div>
+
+                        <h2 class="font-bold text-lg">
+                            {{ $repost->user->name }}
+                        </h2>
+
+                        <p class="text-gray-500 text-sm">
+                            {{ '@'.$repost->user->username }}
+                        </p>
+
                     </div>
 
-                    <!-- Pesan -->
-                    @isset ($borrow->message)
-                        <h2 class="text-lg font-bold mt-10 mb-3">Pesan</h2>
-
-                        <div class="flex items-start gap-3 mb-4 bg-sky-50 p-4 rounded-lg">
-                            
-                            <!-- Foto Profil -->
-                            <img 
-                                src="https://picsum.photos/40?random=20" 
-                                class="rounded-full w-10 h-10 object-cover"
-                            >
-
-                            <!-- Bubble Chat -->
-                            <div class="max-w-md">
-                                
-                                <!-- Nama -->
-                                <p class="text-sm font-semibold text-gray-800 mb-1">
-                                    Admin Perpustakaan
-                                </p>
-
-                                <!-- Bubble -->
-                                <div class="bg-gray-50 rounded-xl px-4 py-2 text-sm text-gray-700 shadow-sm">
-                                    {{ $borrow->message }}
-                                </div>
-
-                                <!-- Timestamp (optional) -->
-                                <p class="text-xs text-gray-400 mt-1">
-                                    {{ $borrow->updated_at->format('H:i') }} WIB
-                                </p>
-
-                            </div>
-                        </div>
-                    @endisset
                 </div>
 
-                <!-- Grid 5 -->
-                <div class="bg-white md:p-6 rounded"></div>
+                {{-- COVER --}}
+                @if ($repost->book->cover)
 
-                <!-- Grid 6 -->
-                <div class="bg-white md:p-6 rounded"></div>
+                    <img
+                        src="{{ Storage::url($repost->book->cover) }}"
+                        class="w-full h-[400px] object-cover">
 
-                <!-- Grid 7 -->
-                <div class="bg-white md:p-6 rounded"></div>
+                @endif
 
-                <!-- Grid 8 -->
-                <div class="bg-white md:p-6 rounded"></div>
+                {{-- CONTENT --}}
+                <div class="p-5">
+
+                    <div class="flex items-center gap-2 text-green-600 mb-3">
+
+                        <i class="fa-solid fa-repeat"></i>
+
+                        <span class="text-sm">
+                            Memposting ulang buku ini
+                        </span>
+
+                    </div>
+
+                    <h1 class="text-2xl font-bold capitalize mb-3">
+                        {{ $repost->book->name }}
+                    </h1>
+
+                    <div class="prose max-w-none text-gray-700">
+
+                        {!! Str::limit($repost->book->body, 200) !!}
+
+                    </div>
+
+                    <div class="mt-5 flex items-center justify-between">
+
+                        <p class="text-sm text-gray-400">
+                            {{ $repost->created_at->diffForHumans() }}
+                        </p>
+
+                        <a
+                            href="/hall/book/{{ $repost->book->slug }}"
+                            class="bg-sky-900 hover:bg-sky-800 text-white px-4 py-2 rounded-full text-sm">
+
+                            Lihat Buku
+
+                        </a>
+
+                    </div>
+
+                </div>
 
             </div>
-        </div>
+
+        @empty
+
+            <div class="bg-white rounded-3xl p-10 text-center shadow">
+
+                <h2 class="text-2xl font-bold">
+                    Belum ada repost 🔁
+                </h2>
+
+            </div>
+
+        @endforelse
+
     </div>
+
+    <div class="mt-8">
+        {{ $reposts->links() }}
+    </div>
+
+</div>
+
 @endsection

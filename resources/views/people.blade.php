@@ -1,6 +1,13 @@
 @extends('layouts.main')
 
 @section('konten')
+    {{-- SEARCH --}}
+    <div class="max-w-3xl mx-auto mb-6 relative">
+
+            <div class="relative w-full">
+                <livewire:hall-search />
+            </div>
+    </div>
     <div class="max-w-6xl mx-auto px-4 py-8">
 
         {{-- TITLE --}}
@@ -51,6 +58,10 @@
                     {{-- USERNAME --}}
                     <p class="text-sm text-gray-500">
                         @ {{ $user->username }}
+                    </p>
+                    {{-- followers --}}
+                    <p class="text-sm text-gray-500">
+                        {{ $user->followers->count() }} followers
                     </p>
 
                     {{-- BUTTON --}}

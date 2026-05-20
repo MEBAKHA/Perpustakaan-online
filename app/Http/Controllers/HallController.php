@@ -23,6 +23,8 @@ public function index(Request $request)
     public function singleBook(Book $book)
     {
         $title = $book->name;
+        // Eager-load borrows with user to avoid querying in the view
+        $book->load('borrows.user', 'user', 'category', 'author');
         return view('book', compact('title', 'book'));
     }
 

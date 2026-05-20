@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Repost;
 
 class BookController extends Controller
 {
@@ -39,7 +40,6 @@ class BookController extends Controller
     public function index()
     {
         $title = "book | index";
-        $categories = Category::all();
 
         $books = Book::latest()->paginate(9);
 
@@ -95,11 +95,6 @@ class BookController extends Controller
 
         // TYPE
         $validated['type'] = $isAdmin ? 'book' : 'story';
-
-        // AUTHOR DEFAULT UNTUK STORY
-        if (!$isAdmin) {
-            $validated['author_id'] = 1;
-        }
 
         // AUTO SLUG UNTUK STORY
         if (!$isAdmin) {
@@ -242,5 +237,28 @@ class BookController extends Controller
 
         return redirect('/profile/' . $book->user->username)
             ->with('success', 'Story berhasil dihapus!');
+    }
+
+    public function repost($id)
+    {
+        $existing = Repost::where('user_id', auth()->user()->id)
+            ->where('book_id', $id)
+            ->first();
+
+        // jika sudah repost
+        if ($existing) {
+
+            $existing->delete();
+
+            return back()->with('success', 'Posting ulang dibatalkan');
+        }
+
+        // jika belum repost
+        Repost::create([
+            'user_id' => auth()->user()->id,
+            'book_id' => $id
+        ]);
+
+        return back()->with('success', 'Berhasil posting ulang');
     }
 }

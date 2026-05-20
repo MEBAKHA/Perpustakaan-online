@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Symfony\Component\HttpFoundation\Request;
+use App\Models\Comment;
+use App\Models\User;
 
 class Borrow extends Model
 {
@@ -18,14 +19,17 @@ class Borrow extends Model
 
     public function book()
     {
-       return $this->belongsTo( Book::class);
+       return $this->belongsTo(Book::class);
     }
-
 
     public function user()
     {
         return $this->belongsTo(User::class);
-        
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
 }
+

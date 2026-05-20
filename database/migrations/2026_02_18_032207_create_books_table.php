@@ -12,15 +12,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('books', function (Blueprint $table) {
+
             $table->id();
+
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('cover')->nullable();
             $table->text('body');
+
+            $table->foreignId('category_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->enum('type', ['book', 'story'])
+                ->default('book');
+
+            $table->string('slug')->unique();
+
+            $table->string('cover')->nullable();
+
             $table->timestamp('published_at')->nullable();
-            $table->boolean('status')->default(false);
-            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreignId('author_id')->references('id')->on('authors')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
