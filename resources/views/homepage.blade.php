@@ -2,62 +2,131 @@
 @extends('layouts.main')
 
 @section('konten')
-    {{-- hero --}}
-    <section class="pt-10 bg-gray-100 sm:pt-16 lg:pt-24">
-        <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl lg:leading-tight">hello  <span class="text-black  hover:bg-cyan-900 hover:text-cyan-300 in-hover:text-amber-400 hover:underline transition-all duration-300">{{ auth()->user()?->username ?? 'Guest' }}</span> selamat datang di Horeampedia <span class=" text-7xl animate-pulse">👋</span></h2>
-                <p class="mt-6 text-lg text-gray-900">"tempat membaca, menulis, dan berbagi cerita"</p>
-                <a href="{{auth()->check() && auth()->user()->role == 'admin' ? route('dashboard') : (auth()->check() && auth()->user()->role == 'user' ? route('hall') : route('login'))}}" title="" class="inline-flex items-center justify-center px-6 py-4 mt-12 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-cyan-400" role="button">
-                  <i class="fa-solid fa-book-open mr-2"></i> 
-                      Read now
-                </a>
-            </div>
-        </div>
-    
-        <div class="container mx-auto 2xl:px-12">
-            <img class="w-full mt-6" src="https://cdn.rareblocks.xyz/collection/celebration/images/team/4/group-of-people.png" alt="" />
-        </div>
-    </section>
-     
 
-    {{-- new book --}}
-    <section class="py-10 sm:py-16 lg:py-24 ">
-        <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Content cerita yang Terbaru</h2>
-                <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600">selamat datang di {{ $title }}</p>
-            </div>
+<section class="py-10 min-h-screen">
+
+    <div class="max-w-5xl mx-auto px-4">
+        {{-- FEED --}}
+        <div class="space-y-8">
+
+            @foreach ($books as $book)
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 pb-4">
+
+                    {{-- USER --}}
+                    <div class="flex items-center justify-between p-5">
+
+                        <div class="flex items-center gap-3">
+
+                            {{-- AVATAR --}}
+                            <img src="{{ $book->user && $book->user->avatar 
+                                ? asset('storage/' . $book->user->avatar) 
+                                : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+                                class="w-10 h-10 rounded-full object-cover shadow-md">
+
+                            <div>
+                                <h3 class="font-semibold text-gray-900">
+                                    {{ $book->user->name }}
+                                </h3>
+                                
+                                <p class="text-xs text-gray-500">
+                                    @ {{ $book->user->username }}
+                                </p>
+
+                                <p class="text-xs text-gray-500">
+                                   <i class="fa-regular fa-clock"></i> {{ $book->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+
+                        </div>
     
-            <div class="grid max-w-md grid-cols-1 mx-auto mt-12 lg:max-w-full lg:mt-16 lg:grid-cols-3 gap-x-16 gap-y-12">
-                
-                @foreach ($books as $book)
-                    <div>
-                        <a href="/hall/book/{{ $book->slug }}" class="block aspect-w-4 aspect-h-3">
-                            @if ($book->cover)
-                                <img class="object-cover w-full h-full" src="{{ Storage::url($book->cover) }}" alt="{{ $book->name }}" />
-                            @else   
-                                <img class="object-cover w-full h-full" src="https://picsum.photos/400/400" alt="{{ $book->name }}" />
-                            @endif
-                        </a>
-                        <span class="inline-flex px-4 py-2 text-xs font-semibold tracking-widest uppercase rounded-full {{ $book->category_color }} mt-9">
+                        
+                        <button class="text-gray-400 text-2xl">
+                            ⋮
+                        </button>
+
+
+                    </div>
+
+                    {{-- COVER --}}
+                    <a href="/hall/book/{{ $book->slug }}">
+
+                        @if ($book->cover)
+                            <img 
+                                src="{{ Storage::url($book->cover) }}" 
+                                alt="{{ $book->name }}"
+                                class="w-full h-full object-cover"
+                            >
+                        @else
+                            <img 
+                                src="https://picsum.photos/1200/600"
+                                alt="{{ $book->name }}"
+                                class="w-full h-full object-cover"
+                            >
+                        @endif
+
+                    </a>
+
+                    {{-- CONTENT --}}
+                    <div class="p-6">
+
+                        {{-- ACTION --}}
+                        <div class="flex items-center gap-5 text-2xl mb-5">
+                          <i class="fa-regular fa-star"></i>
+                          <i class="fa-solid fa-share"></i>
+                          <i class="fa-solid fa-comment"></i>
+                          <i class="fa-solid fa-repeat"></i>
+                        </div>
+
+                          
+                        
+                        {{-- CATEGORY --}}
+                        <span class="inline-flex px-4 py-2 text-xs font-semibold tracking-widest uppercase rounded-full {{ $book->category_color }}">
                             {{ $book->category->name }}
                         </span>
-                        <p class="mt-6 text-xl font-semibold">
-                            <a href="/hall/book/{{ $book->slug }}" class="text-black capitalize">{{ $book->name }}</a>
-                        </p>
-                        <p class="mt-4 text-gray-600">
-                            {{ Str::limit($book->body, 150) }}
-                        </p>
-                        <div class="h-0 mt-6 mb-4 border-t-2 border-gray-200 border-dashed"></div>
-                        <span class="block text-sm font-bold tracking-widest text-gray-500 uppercase">
-                            {{ $book->user->username }}
-                        </span>
-                    </div>    
-                @endforeach
 
-            </div>
+                        {{-- TITLE --}}
+                        <h2 class="mt-5 text-3xl font-bold text-gray-900 capitalize">
+                            <a href="/hall/book/{{ $book->slug }}">
+                                {{ $book->name }}
+                            </a>
+                        </h2>
+
+                        {{-- BODY --}}
+                        <p class="mt-4 text-gray-600 leading-relaxed">
+                            {{ Str::limit($book->body, 180) }}
+                        </p>
+                        <br>
+                        <br>
+
+                        @auth
+
+                            <a
+                            wire:navigate 
+                            class=" bg-blue-400 shadow shadow-blue-200 text-cyan-50 px-4 py-3 hover:bg-blue-600 hover:text-white hover:shadow-2xl hover:py-4 transition-all duration-500 font-semibold text-lg focus:outline-none focus:shadow-outline" 
+                            href=" /hall/book/{{ $book->slug }}"> <i class="fa-solid fa-eye mr-2"></i> Lihat Selengkapnya </a> 
+                        
+                            
+                        @else
+
+                            <a
+                            wire:navigate 
+                            class=" bg-red-600 text-cyan-50 py-4 px-3" onclick=" return confirm('apakah anda ingin membuka lebih lengkap dan detail? tolong login terlebih dahulu')"
+                            href="/login"> <i class="fa-solid fa-eye mr-2"></i> Lihat Selengkapnya </a> 
+                            
+                        @endauth
+
+
+                    </div>
+
+                </div>
+
+            @endforeach
+
         </div>
-    </section> 
-      
+
+    </div>
+
+</section>
+
 @endsection

@@ -5,18 +5,17 @@
             
             <!-- Title -->
             <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
-               Welcome to {{ $title ?? 'LITEMARI' }}
+               Welcome to {{ $title ?? 'HOREAMPEDIA' }}
             </h1>
 
             <!-- User Button -->
             <a 
                 class="flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto text-sm sm:text-lg bg-purple-500 text-blue-50 border-2 border-b-purple-700 py-2 px-4 rounded-2xl focus:outline-offset-1 focus:ring-1 focus:ring-blue-600"
-                href="{{ auth()->check() && auth()->user()->role == 'admin' 
-                    ? route('dashboard') 
-                    : (auth()->check() && auth()->user()->role == 'user' 
-                        ? route('profile') 
-                        : route('login')) }}"
-            >
+                href="{{ auth()->check() && auth()->user()->role == 'admin'
+                ? route('dashboard')
+                : (auth()->check() && auth()->user()->role == 'user'
+                    ? route('profile', auth()->user()->username)
+                    : route('login')) }}"
                 <i class="fa-solid fa-user"></i>
                 {{ auth()->user()?->username ?? 'Guest' }}
             </a>

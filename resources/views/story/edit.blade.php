@@ -6,7 +6,7 @@
     <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
         <h2 class="text-2xl font-bold mb-6 text-gray-800">
-          Create New Content
+          Edit New Content
         </h2>
 
         <form action="{{ route('story.store') }}" method="POST" enctype="multipart/form-data">
@@ -18,12 +18,17 @@
             <div>
                 <div class="border-2 border-dashed rounded-xl h-64 flex items-center justify-center cursor-pointer hover:bg-gray-50 relative overflow-hidden">
 
-                    <img id="previewImage" class="hidden w-full h-full object-cover absolute inset-0">
+                    <!-- Tambahkan id="coverInput" pada input file di bawah, lalu pemicu click() di img ini -->
+                    <img id="previewImage" 
+                        src="{{ $book->cover ? asset('storage/' . $book->cover) : '' }}" 
+                        class="{{ $book->cover ? '' : 'hidden' }} w-full h-full object-cover absolute inset-0 z-0"
+                        onclick="document.getElementById('coverInput').click()">
 
-                    <label class="flex flex-col items-center cursor-pointer z-10">
+                    <label id="uploadLabel" class="flex flex-col items-center cursor-pointer z-10 {{ $book->cover ? 'hidden' : '' }}">
                         <i class="fa-solid fa-image text-4xl text-gray-400 mb-2"></i>
                         <span class="text-gray-500 text-sm">Upload Cover</span>
-                        <input type="file" name="cover" class="hidden" onchange="previewCover(event)">
+                        <!-- Tambahkan id="coverInput" di sini -->
+                        <input id="coverInput" type="file" name="cover" class="hidden" onchange="previewCover(event)">
                     </label>
 
                     @error('cover')
@@ -33,24 +38,26 @@
                 </div>
             </div>
 
+
+
             <!-- FORM -->
             <div class="md:col-span-2 space-y-4">
 
                 <!-- TITLE -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" required
+                    <input type="text" name="name" id="name" value="{{old ('name', $book->name)  }}" required
                         class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('name') border-red-500 @enderror">
                     @error('name')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
-                            </div>
+                </div>
 
                 <!-- SLUG -->
                 <div>
         
                     <label for="slug" class="block text-sm font-medium text-gray-700">Slug</label>
-                    <input type="text" name="slug" id="slug" value="{{ old('slug') }}" required
+                    <input type="text" name="slug" id="slug" value="{{ old('slug', $book->slug) }}" required
                         class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('slug') border-red-500 @enderror">
                     @error('slug')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -63,7 +70,7 @@
                     <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
                     <select name="category_id" id="category_id" required
                     class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('category_id') border-red-500 @enderror">
-                        <option value=""></option>
+                        <option value="{{old('category_id', $book->category_id)  }}"></option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" @selected(old('category_id' ?? '') == $category->id)>
                             {{ $category->name }}
@@ -107,11 +114,12 @@
         <div class="justify-center items-center">
           <button type="submit"
             class="inline-flex items-center px-12 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <i class="fa-solid fa-upload mr-3"></i>
-            Create
+            <i class="fa-solid fa-arrow-rotate-right mr-3"></i>
+            Update
           </button>
-        </div>        
+        </div>    
     </form>
+
 </div>
 
 <script>
@@ -157,6 +165,25 @@ function previewCover(event) {
         imgPreview.src = oFREvent.target.result;
       }
     }
+
+    function previewCover(event) {
+    const input = event.target;
+    const preview = document.getElementById('previewImage');
+    const label = document.getElementById('uploadLabel');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden'); // Tampilkan gambar
+            label.classList.add('hidden');       // Sembunyikan ikon teks upload
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 </script>
 
 

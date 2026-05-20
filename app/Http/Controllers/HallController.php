@@ -1,11 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Author;
 use App\Models\Book;
-use App\Models\Category;
-use App\Models\Story;
 use Illuminate\Http\Request;
 
 class HallController extends Controller
@@ -16,7 +12,7 @@ public function index(Request $request)
 
     // 🔵 SEMUA DATA (BOOK + STORY)
     $feed = Book::latest()
-        ->search($request->only(['search', 'category', 'author']))
+        ->search($request->only(['search', 'category', 'user']))
         ->get()
         ->sortByDesc('created_at')
         ->values();

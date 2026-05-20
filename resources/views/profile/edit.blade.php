@@ -104,7 +104,7 @@
 
             <!-- SUBMIT -->
             <div class="flex justify-end">
-                <button class=" bg-blue-400 text-white py-3 px-2 rounded-2xl" onclick="return confirmUpdate()" type="submit">
+                <button wire:click="updateProfile" class=" bg-blue-400 text-white py-3 px-2 rounded-2xl" onclick="return confirmUpdate()" type="submit">
                     Update Profile
                 </button>
 

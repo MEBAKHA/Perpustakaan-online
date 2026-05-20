@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\CategoryController;
@@ -8,11 +7,12 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HallController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\peopleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
@@ -37,6 +37,10 @@ Route::get('/login', [LoginController::class, 'login'])
 
 Route::post('/login', [LoginController::class, 'authenticate'])
     ->middleware('guest');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::get('/registration', [LoginController::class, 'registration'])
     ->middleware('guest');
@@ -63,30 +67,38 @@ Route::get('/hall/book/{book:slug}', [HallController::class, 'singleBook']);
 */
 // PROFILE SENDIRI
 Route::get('/profile', [ProfileController::class, 'index'])
-    ->name('profile')
-    ->middleware('auth');
+    ->middleware('auth')
+    ->name('profile.self');
 
-// 🔥 AUTH ACTIONS (HARUS DI ATAS)
+
+// EDIT PROFILE
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::post('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update');
 
     // FOLLOW
-    Route::post('/follow/{id}', [FollowController::class, 'follow'])->name('follow');
-    Route::post('/unfollow/{id}', [FollowController::class, 'unfollow'])->name('unfollow');
+    Route::post('/follow/{id}', [FollowController::class, 'follow'])
+        ->name('follow');
+
+    Route::post('/unfollow/{id}', [FollowController::class, 'unfollow'])
+        ->name('unfollow');
 });
 
-// 🔹 PROFILE ORANG LAIN (PALING BAWAH)
-Route::get('/profile/{username}', [ProfileController::class, 'show'])
-    ->name('profile.show')
-    ->where('username', '^(?!edit$)[A-Za-z0-9_]+');
 
-// 🔹 FOLLOWERS (WAJIB ADA)
+// PROFILE ORANG
+// Pastikan followers/following didefinisikan sebelum route pengguna umum
 Route::get('/profile/{username}/followers', [ProfileController::class, 'followers'])
     ->name('followers');
 
 Route::get('/profile/{username}/following', [ProfileController::class, 'following'])
     ->name('following');
+
+Route::get('/profile/{username}', [ProfileController::class, 'show'])
+    ->name('profile');
 /*    
 |--------------------------------------------------------------------------
 | BORROW
@@ -106,10 +118,12 @@ Route::get('/borrow/detail/{borrow}', [BorrowController::class, 'detail'])
 | Story
 |--------------------------------------------------------------------------
 */
-    Route::middleware('auth')->group(function () {
-        Route::get('/story/create', [BookController::class, 'create'])->name('story.create');
-        Route::post('/story', [BookController::class, 'store'])->name('story.store');
-    });
+Route::middleware('auth')->group(function () {
+    Route::get('/story/create', [BookController::class, 'create'])->name('story.create');
+    Route::get('/story/{book:slug}/edit', [BookController::class, 'edit'])->name('story.edit');
+    Route::delete('/story/{book:slug}', [BookController::class, 'destroy'])->name('story.destroy');
+    Route::post('/story', [BookController::class, 'store'])->name('story.store');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +132,16 @@ Route::get('/borrow/detail/{borrow}', [BorrowController::class, 'detail'])
 */
 
 Route::get('/search-suggestions', [BookController::class, 'suggestions']);
+
+/*
+        |--------------------------------------------------------------------------
+        | Tampilan People
+        |--------------------------------------------------------------------------
+        
+        */
+
+Route::get('/people', [peopleController::class, 'index'])
+    ->name('people');
 
 /*
 |--------------------------------------------------------------------------
@@ -150,4 +174,26 @@ Route::prefix('dashboard')
         Route::get('/borrow/{borrow}/edit', [BorrowController::class, 'edit']);
         Route::put('/borrow/{borrow}', [BorrowController::class, 'update']);
         Route::delete('/borrow/{borrow}', [BorrowController::class, 'destroy']);
-});
+    });
+
+// Halaman pemberitahuan untuk verifikasi email
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Handler untuk memproses link verifikasi yang diklik user
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Mengirim ulang link verifikasi
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+// Contoh rute yang hanya bisa diakses setelah verifikasi
+Route::get('/home', function () {
+    return view('home');
+})->middleware(['auth', 'verified']);

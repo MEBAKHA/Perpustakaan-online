@@ -13,14 +13,14 @@ class ProfileController extends Controller
     public function index()
     {
 
-    $user = Auth::user(); // 🔥 WAJIB ADA
-    $title = "Profile";
-    $stories = $user->stories()->latest()->get();
-    return view('/profile/profile', compact('user', 'title', 'stories'));
+        $user = Auth::user(); // 🔥 WAJIB ADA
+        return redirect()->route('profile', auth()->user()->username);
 
     }
 
-    public function show($username)
+    
+
+    public function show($username, $name = null, $slug = null)
     {
         $user = User::where('username', $username)->firstOrFail(); // 🔥 WAJIB
         $title = $user->name . "'s Profile";
@@ -81,7 +81,8 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Profile berhasil diupdate!');
+        return redirect()->route('profile', $user->username)->with('success', 'Profile berhasil diupdate!');
+        
  
     }
 

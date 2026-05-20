@@ -6,20 +6,21 @@
             <h2 class="text-3xl font-bold mb-2 capitalize">{{ $book->name }}</h2>
 
             <p class="text-gray-600 text-sm">
-               @if(auth()->check() && $book->user && $book->user->id == auth()->user()->id)
-               <a href="/profile" class="flex items-center gap-3 text-blue-600 hover:underline">
-               @else
-               <a href="/profile/{{ $book->user->username }}" class="flex items-center gap-3 text-blue-600 hover:underline">
-               @endif
+                @if (auth()->check() && $book->user && $book->user->id == auth()->user()->id)
+                    <a href="/profile" class="flex items-center gap-3 text-blue-600 hover:underline">
+                    @else
+                        <a href="/profile/{{ $book->user->username }}"
+                            class="flex items-center gap-3 text-blue-600 hover:underline">
+                @endif
 
-                    <img src="{{ $book->user && $book->user->avatar 
-                        ? asset('storage/' . $book->user->avatar) 
-                        : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
-                        class="w-10 h-10 rounded-full object-cover shadow-md">
+                <img src="{{ $book->user && $book->user->avatar
+                    ? asset('storage/' . $book->user->avatar)
+                    : 'https://upload.wikimedia.org/wikipedia/en/9/96/Meme_Man_on_transparent_background.webp' }}"
+                    class="w-10 h-10 rounded-full object-cover shadow-md">
 
-                    <span class="text-gray-800 hover:text-blue-600 transition">
-                        {{ $book->user->name ?? 'Unknown User' }}
-                    </span>
+                <span class="text-gray-800 hover:text-blue-600 transition">
+                    {{ $book->user->name ?? 'Unknown User' }}
+                </span>
 
                 </a>
             </p>
@@ -35,6 +36,14 @@
             <article class="prose max-w-none my-6">
                 {!! $book->body !!}
             </article>
+
+            {{-- ACTION --}}
+            <div class="flex items-center gap-5 text-2xl mb-5">
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-solid fa-share"></i>
+                <i class="fa-solid fa-comment"></i>
+                <i class="fa-solid fa-repeat"></i>
+            </div>
             <div class=" flex justify-between items-center">
                 <a href="/hall" class="inline-block text-blue-500 hover:underline mt-4">← Back to blog</a>
                 @auth
@@ -43,7 +52,7 @@
                             class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                             <i class="fa-solid fa-repeat"></i>
                             posting ulang
-                           
+
                         </a>
                     @else
                         <form action="/borrow" method="POST">
@@ -52,7 +61,7 @@
                             @csrf
                             <button type="submit"
                                 class=" inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                               <i class="fa-solid fa-repeat"></i>
+                                <i class="fa-solid fa-repeat"></i>
                                 Memosting ulang
                             </button>
                         </form>
@@ -61,8 +70,8 @@
                     <a href="/login"
                         class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 font-semibold text-white shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                         <i class="fa-solid fa-book-open-reader"></i>
-                       <i class="fa-solid fa-repeat"></i>
-                       Posting ulang
+                        <i class="fa-solid fa-repeat"></i>
+                        Posting ulang
                     </a>
 
 

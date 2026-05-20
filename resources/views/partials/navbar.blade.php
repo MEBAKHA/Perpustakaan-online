@@ -11,7 +11,10 @@
                     <a href="/" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page"><i class="fa-solid fa-house"></i> Homepage</a>
                     <a href="/hall" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-border-all"></i> Hall</a>
                     @auth
-                        <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
+                        <a href="/people" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"><i class="fa-solid fa-person mr-2"></i>People</a>
+                    @endauth
+                    @auth
+                    <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
                     @endauth
                 </div>
             </div>
@@ -50,12 +53,13 @@
                         x-transition:leave-end="opacity-0 scale-95"
                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                         <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
-                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"> <i class="fa-solid fa-circle-user"></i> {{ auth()->user()->name }}</a>
+                        <a href="/profile/{{ auth()->user()->username }}" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"> <i class="fa-solid fa-circle-user"></i> {{ auth()->user()->name }}</a>
                         @if (auth()->user()->role == 'admin')
                             <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" role="menuitem" tabindex="-1" id="user-menu-item-0"><i class="fa-solid fa-display"></i> Dashboard</a>
                         @endif
                         <a href="{{ route('story.create') }}" class="block px-4 py-2 text-sm text-gray-700 focus:text-cyan-600  hover:bg-gray-100 transition "> <i class="fa-solid fa-plus"></i> create Story</a>
                         <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"><i class="fa-solid fa-circle-info mr-2"></i>About</a>
+                        <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"><i class="fa-solid fa-gear mr-2"></i>Settings</a>
                         <form action="/logout" method="POST">
                             @csrf
                             <button onclick="return confirm('Apakah anda yakin untuk logout?')" type="submit" class="cursor-pointer px-4 py-2 text-sm text-red-500 hover:bg-gray-100 transition w-full text-left" role="menuitem" tabindex="-1" id="user-menu-item-2"><i class="fa-solid fa-up-right-from-square mr-3"></i>Sign out</button>
@@ -93,9 +97,13 @@
                 <a href="/" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}" aria-current="page">Homepage</a>
                 <a href="/hall" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('hall*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">Hall</a>
                 @auth
-                    <a href="/borrows/{{auth()->user()->slug }}" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">Borrow</a>
+                    <a href="/borrows/{{auth()->user()->slug }}" class="rounded-md px-3 py-2 text-sm font-medium {{ request()->is('borrows*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"> <i class="fa-solid fa-repeat"></i> Posting Ulang </a>
                 @endauth
                 <a href="/about" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">About</a>
+                @auth
+                    <a href="/people" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('people*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}"><i class="fa-solid fa-person mr-2"></i>People</a>
+                @endauth
+                <a href="/about" class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about*') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}><i class="fa-solid fa-gear mr-2"></i>Settings</a>
             </div>
             <div class="border-t border-gray-700 pt-4 pb-3">
             <div class="flex items-center px-5">
