@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -11,6 +12,9 @@ class HomeController extends Controller
     {
         $title = "Homepage";
         $books = Book::latest('published_at')->take(3)->get();
+        $users = auth()->check()
+            ? auth()->user()->following()->withCount('followers')->take(6)->get()
+            : collect();
 
         $color = [
             'bg-sky-100 text-sky-500',
@@ -30,6 +34,6 @@ class HomeController extends Controller
         }
 
         // return dd('books');
-        return view('homepage', compact('title', 'books'));
+        return view('homepage', compact('title', 'books', 'users'));
     }
 }

@@ -35,19 +35,6 @@
                 <p class="text-sm sm:text-base text-gray-200">
                     @ {{ $user?->username ?? 'guest' }}
                 </p>
-
-                <!-- Stats -->
-                <div class="flex gap-8 mt-4 text-center">
-                    <div>
-                        <p class="font-bold text-lg">1</p>
-                        <p class="text-xs sm:text-sm">Work</p>
-                    </div>
-
-                    <div>
-                        <p class="font-bold text-lg">1</p>
-                        <p class="text-xs sm:text-sm">Reading</p>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -59,7 +46,7 @@
 
                     <!-- MENU -->
                     <div class="flex overflow-x-auto no-scrollbar gap-5 text-sm sm:text-base">
-                        <button class="py-4 border-b-2 border-orange-500 font-semibold whitespace-nowrap">
+                        <button class="py-4 text-gray-500 font-semibold whitespace-nowrap  hover:text-black">
                             About
                         </button>
 

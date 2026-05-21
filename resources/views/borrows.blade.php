@@ -165,7 +165,7 @@
                                     <a href="/hall"
                                         class="bg-sky-900 hover:bg-sky-800 text-white px-5 py-2 rounded-full text-sm transition">
 
-                                        lihat content
+                                        <i class="fa-solid fa-eye mr-2"></i>lihat Lebih detail
 
                                     </a>
 
