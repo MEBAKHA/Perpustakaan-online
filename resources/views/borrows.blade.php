@@ -162,7 +162,7 @@
                                     @endauth
 
                                     {{-- DETAIL --}}
-                                    <a href="/hall"
+                                    <a href="/hall/book/{{ $repost->book->slug }}"
                                         class="bg-sky-900 hover:bg-sky-800 text-white px-5 py-2 rounded-full text-sm transition">
 
                                         <i class="fa-solid fa-eye mr-2"></i>lihat Lebih detail

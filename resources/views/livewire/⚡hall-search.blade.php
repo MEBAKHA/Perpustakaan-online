@@ -33,8 +33,22 @@ new class extends Component
                     'url' => '/profile/' . $user->username,
                 ];
             });
+        $people = User::where('name', 'like', '%' . $this->search . '%')  
+            ->orWhere('username', 'like', '%' . $this->search . '%')
+            ->limit(5)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    
+                    'type' => 'user',
+                    'name' => $user->name,
+                    'username' => $user->username,
+                    'url' => '/people/' . $user->username,
+                ];
 
-       return collect($books)->merge($users);
+            });  
+
+       return collect($books)->merge($users)->merge($people)->unique('url');
     }
 };
 ?>
@@ -98,11 +112,12 @@ new class extends Component
 
         </div>
 
-        <button
+        <a  
+            href="/hall?search={{ $search }}"
             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all"
         >
             <i class="fa-solid fa-search"></i>
-        </button>
+        </a>
 
     </div>
 

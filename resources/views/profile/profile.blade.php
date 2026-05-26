@@ -67,21 +67,20 @@
 
                     <!-- BUTTON -->
                     <div class="pb-4 md:pb-0 md:py-0">
-                        @if (auth()->check() && auth()->user()->id === $user->id)
-                            <a href="{{ route('profile.edit') }}"
-                                class="block text-center bg-gray-200 px-5 py-2 rounded-lg text-sm hover:bg-gray-300 transition">
-                                Edit Profile
-                            </a>
-                        @else
-                            <form action="{{ route('follow', $user->id) }}" method="POST">
-                                @csrf
+                        <div>
+                            @if (auth()->check() && auth()->user()->id === $user->id)
+                                <a href="{{ route('profile.edit') }}"
+                                    class="block text-center bg-gray-200 px-5 py-2 rounded-lg text-sm hover:bg-gray-300 transition">
+                                    Edit Profile
+                                </a>
+                            @else
+                                <livewire:follow-button
+                                :user="$user"
+                                :key="'follow-'.$user->id.'-'.now()->timestamp"
+                            />
+                            @endif
+                        </div>
 
-                                <button type="submit"
-                                    class="w-full md:w-auto bg-blue-500 text-white px-5 py-2 rounded-lg text-sm hover:bg-blue-600 transition">
-                                    <i class="fa-solid fa-heart"></i> Follow
-                                </button>
-                            </form>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -108,44 +107,45 @@
                 <div class="md:col-span-2 space-y-4">
 
                     @if (auth()->check() && auth()->user()->id === $user->id)
-                       @forelse ($user->stories ?? [] as $story)
-                        <div class="bg-white bg-black p-5 rounded-2xl shadow hover:shadow-lg transition">
+                        @forelse ($user->stories ?? [] as $story)
+                            <div class="bg-white bg-black p-5 rounded-2xl shadow hover:shadow-lg transition">
 
 
-                            <img src="{{ $story->cover ? Storage::url($story->cover) : 'https://picsum.photos/1200/400' }}"
-                                alt="">
-                            <h3 class="font-bold text-lg mb-2">
-                                {{ $story->name }}
-                            </h3>
+                                <img src="{{ $story->cover ? Storage::url($story->cover) : 'https://picsum.photos/1200/400' }}"
+                                    alt="">
+                                <h3 class="font-bold text-lg mb-2">
+                                    {{ $story->name }}
+                                </h3>
 
-                            <p class="text-sm text-gray-600 leading-relaxed">
-                                {{ \Illuminate\Support\Str::limit($story->body ?? 'Belum ada Content...', 100) }}
-                            </p>
+                                <p class="text-sm text-gray-600 leading-relaxed">
+                                    {{ \Illuminate\Support\Str::limit($story->body ?? 'Belum ada Content...', 100) }}
+                                </p>
 
-                            <br>
-                            <div class="flex justify-center items-center mx-auto mt-4 bg-black py-3 px-4 rounded-4xl">
-                                <div class="flex justify-center items-center">
-                                    <form action="/story/{{ $story->slug }}" method="POST"
-                                        class="text-red-500 hover:text-red-600 mr-3">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" onclick="return confirm('Apakah anda yakin?')"><i
-                                                class="fa-sharp fa-solid fa-trash"></i> Delete</button>
-                                    </form>
-                                    <p class="mr-3 text-white">|</p>
-                                    <div class="text-yellow-500 hover:text-yellow-600">
-                                        <a href="/story/{{ $story->slug }}/edit"><i class="fa-solid fa-pen-to-square"></i>
-                                            Edit</a>
+                                <br>
+                                <div class="flex justify-center items-center mx-auto mt-4 bg-black py-3 px-4 rounded-4xl">
+                                    <div class="flex justify-center items-center">
+                                        <form action="/story/{{ $story->slug }}" method="POST"
+                                            class="text-red-500 hover:text-red-600 mr-3">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" onclick="return confirm('Apakah anda yakin?')"><i
+                                                    class="fa-sharp fa-solid fa-trash"></i> Delete</button>
+                                        </form>
+                                        <p class="mr-3 text-white">|</p>
+                                        <div class="text-yellow-500 hover:text-yellow-600">
+                                            <a href="/story/{{ $story->slug }}/edit"><i
+                                                    class="fa-solid fa-pen-to-square"></i>
+                                                Edit</a>
+                                        </div>
+                                        </button>
                                     </div>
-                                    </button>
                                 </div>
-                            </div>
 
-                        @empty
+                            @empty
 
-                            <div class="bg-white p-6 rounded-2xl shadow text-center text-gray-500">
-                                Belum ada Content dari anda...
-                            </div>
+                                <div class="bg-white p-6 rounded-2xl shadow text-center text-gray-500">
+                                    Belum ada Content dari anda...
+                                </div>
                         @endforelse
                     @else
                         @forelse ($user->stories ?? [] as $story)
@@ -163,25 +163,26 @@
                                 </p>
 
                                 <br>
-                                
+
                                 {{-- ACTION --}}
                                 <div class="flex items-center gap-5 text-2xl mb-5">
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-solid fa-share"></i>
-                                <i class="fa-solid fa-comment"></i>
-                                <i class="fa-solid fa-repeat"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-solid fa-share"></i>
+                                    <i class="fa-solid fa-comment"></i>
+                                    <i class="fa-solid fa-repeat"></i>
                                 </div>
-                            </div>    
+                            </div>
 
-                            @empty
+                        @empty
 
-                                <div class="bg-white p-6 rounded-2xl shadow text-center text-gray-500">
-                                    Belum ada Content dari {{ $user->name }} atau yang bisa di panggil {{ $user->username }}...
-                                </div>
+                            <div class="bg-white p-6 rounded-2xl shadow text-center text-gray-500">
+                                Belum ada Content dari {{ $user->name }} atau yang bisa di panggil
+                                {{ $user->username }}...
+                            </div>
                         @endforelse
                     @endif
 
-                    
+
 
                 </div>
 
